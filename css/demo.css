@@ -152,3 +152,37 @@ a:hover, a:focus {
 	}
 
 }
+
+
+/**** NEW STYLE *****/
+.buttons a:first-child:not(:only-child) {
+	font-size: 1.5em;
+	display: block;
+	color: green;
+}
+
+.logo {
+	position: absolute;
+	top: 5px;
+	left:20px;
+	height:50px;
+	z-index: 10000;
+}
+
+.bb-progressbar {
+	position: absolute;
+	width:100%;
+	margin: 0 auto;
+	background: #333;
+	z-index: 1000;
+	padding-left:150px;
+	color:#FFF;
+}
+
+.bb-custom-side {
+	padding-top:80px;
+}
+
+.bb-side-inner {
+	padding-left:20px;
+}
