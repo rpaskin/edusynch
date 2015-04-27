@@ -184,5 +184,16 @@ a:hover, a:focus {
 }
 
 .bb-side-inner {
-	padding-left:20px;
+	padding-left:40px;
+	padding-right: 40px;
 }
+
+.q-marker {
+	font-weight: bold;
+	color:red;
+}
+
+.radio-txt {
+	margin-left:10px;
+}
+
