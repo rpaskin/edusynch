@@ -1,14 +1,17 @@
 var token = '76847686f3cb1b1c50e2796d264bba0c';
 
+var stageURL = 'http://stage.edusynch.com';
+var devURL = 'http://develop.edusynch.com';
+
 function exercise(cat) {
 	$.ajax({
 	  type: "POST",
-	  url: "http://develop.edusynch.com/api/exercises/new_exercise?token="+token+"&category="+cat,
+	  url: devURL + "/api/exercises/new_exercise?token="+token+"&category="+cat,
 	  success: function(data){ 
 
 		    console.log(data);
 
-		    var edusynchNext = "http://develop.edusynch.com/api/questions/next_question?token="+token+"&exercise="+data.id;
+		    var edusynchNext = devURL + "/api/questions/next_question?token="+token+"&exercise="+data.id;
  
 			$.getJSON( edusynchNext, function( q ) {
 		      console.log(q);
@@ -45,7 +48,7 @@ $(function() {
 
 	$("#login").click(function(){
 
-		var edusynchAPI = "http://develop.edusynch.com/api/students/login?type=native&email=macksuel@edusynch.com&password=test";
+		var edusynchAPI = devURL + "/api/students/login?type=native&email=macksuel@edusynch.com&password=test";
 	    $.getJSON( edusynchAPI, function( data ) {
 	      	console.log(data);
 	    });
@@ -53,7 +56,7 @@ $(function() {
 
 	$("#categories").click(function(){
 
-		var edusynchCats = "http://develop.edusynch.com/api/categories/all?token="+token;
+		var edusynchCats = devURL + "/api/categories/all?token="+token;
  
 		$.getJSON( edusynchCats, function( data ) {
 	      console.log(data);
@@ -65,6 +68,10 @@ $(function() {
 
 	    });
 
+	});
+
+	$('#new_exercise').click(function() {
+		exercise(1);
 	});
 
 });
