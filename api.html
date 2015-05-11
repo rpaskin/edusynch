@@ -18,18 +18,32 @@
 
 			ul li {
 				padding-bottom: 10px;
+				list-style-type: none;
+			}
+
+			#cat-ul li {
+				display: inline-block;
+				padding-right:10px;
+			}
+
+			#alts li label {
+				cursor: pointer;
 			}
 
 			@media (min-width: 700px) {
-				#sidebar, #content {
-					float:left;
+				.half {
+					width:48%;
+					float: left;
+					min-height:1000px;
 				}
-				#sidebar {
-					width:30%;
-					min-height: 1000px;
+
+				.lside {
+					border-right:2px solid #000;
+					margin-right:2%;
 				}
-				#content {
-					width:70%;
+
+				.rside {
+					margin-left:2%;
 				}
 			}
 		</style>
@@ -37,25 +51,26 @@
 	</head>
 	<body>
 
-		<div id="sidebar">
+		<header>
 			<button id="login">EduSynch Login</button>
 			<button id="categories">GET Categories</button>
-			<button id="new_exercise">Next Question ></button>
+			<button id="new_passage">Next Question ></button>
 			<ul id="cat-ul">
 			</ul>
-		</div>
+		</header>
 
-		<div id="content">
-			<div id="paragraphs">
-			</div>
-
-			<p id="q-cat"></p>
+		<section class="half lside">
 			<div id="questions">
 			</div>
 
 			<ul id="alts">
 			</ul>
-		</div>
+		</section>
+
+		<section class="half rside">
+			<div id="paragraphs">
+			</div>
+		</section>
 		<!-- javascript -->
 		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="js/api.js"></script>

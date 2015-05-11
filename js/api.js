@@ -3,48 +3,54 @@ var token = '76847686f3cb1b1c50e2796d264bba0c';
 var stageURL = 'http://stage.edusynch.com';
 var devURL = 'http://develop.edusynch.com';
 
+//keeps track of q # and Total
+var qCount = 0;
+var qTotal = 0;
+
 function exercise(cat) {
 	$.ajax({
-	  type: "POST",
-	  url: devURL + "/api/exercises/new_exercise?token="+token+"&category="+cat,
-	  success: function(data){ 
-
+		type: "POST",
+	  	url: devURL + "/api/exercises/new_exercise?token="+token+"&category="+cat,
+	  	success: function(data){ 
 		    console.log(data);
 
 		    var edusynchNext = devURL + "/api/questions/next_question?token="+token+"&exercise="+data.id;
  
 			$.getJSON( edusynchNext, function( q ) {
-		      console.log(q);
+		    	console.log(q);
+		      	var pHTML = "";
+		      	var qHTML = "";
+		      	var aHTML = "";
+		      	var v = q.paragraphs[0];
+ 				
+		      	/* 
+ 				pHTML = '<p class="paragraph-txt-' + v.id + '">' + v.paragraph_text + '</p>';
+	      		$('#paragraphs').append(pHTML);
+	      		*/
+ 
+		      	if (v.questions[qCount].question_paragraph != null) {
+		      		pHTML = '<p class="paragraph-txt-' + v.questions[qCount].id + '">' + v.questions[qCount].question_paragraph + '</p>';
+	      			$('#paragraphs').append(pHTML);
+		      	} else {
+		      		pHTML = '<p class="paragraph-txt-' + v.questions[qCount].id + '">' + v.paragraph_text + '</p>';
+	      			$('#paragraphs').append(pHTML);
+		      	}
 
-		      $(q.paragraphs).each(function(i, v) {
-		      	var pHTML = '<p>' + v.paragraph_text + '</p>';
-		      	$('#paragraphs').append(pHTML);
+	      		qHTML = '<p>' + v.questions[qCount].description + '</p>';
+	      		$('#questions').append(qHTML);
 
-		      	$(v.questions).each(function(index, q) {
-
-		      		$('#q-cat').html(q.category);
-
-		      		var qHTML = '<p>' + q.description + '</p>';
-		      		$('#questions').append(qHTML);
-
-		      		$(q.alternatives).each(function(index, alt) {
-
-		      			var aHTML = '<li><input type="radio" name="question" value="' + alt.id + '">' + alt.description + '</li>';
-		      			$('#alts').append(aHTML);
-
-		      		});
-		      	});
-
-		      });
-
-			});
-		}
-	});
-}
+	      		$(v.questions[qCount].alternatives).each(function(index, alt) {
+	      			aHTML = '<li><label><input class="li-radio" type="radio" name="question" value="' + alt.id + '"> &nbsp;' + alt.description + '</label></li>';
+	      			$('#alts').append(aHTML);
+	      		});
+		    	
+			}); // end getJSON
+		} // end success
+	});// end Ajax
+}// end function exersice
 
 
 $(function() {
-  // Handler for .ready() called.
 
 	$("#login").click(function(){
 
@@ -52,7 +58,7 @@ $(function() {
 	    $.getJSON( edusynchAPI, function( data ) {
 	      	console.log(data);
 	    });
-	});
+	}); //end login click
 
 	$("#categories").click(function(){
 
@@ -67,11 +73,13 @@ $(function() {
 	      });
 
 	    });
+	}); // end categoires click
 
-	});
-
-	$('#new_exercise').click(function() {
+	$('#new_passage').click(function() {
+		$('#questions').html('');
+		$('#alts').html('');
+		$('#paragraphs').html('');
 		exercise(1);
-	});
+	}); //end new exercise click
 
 });
