@@ -30,19 +30,29 @@
 				cursor: pointer;
 			}
 
+			p {
+				border:1px solid #FFF;
+				padding:8px;
+			}
+
+			.active {
+				border:1px solid red;
+			}
+
 			@media (min-width: 700px) {
 				.half {
 					width:48%;
 					float: left;
-					min-height:1000px;
+					height:100%;
 				}
 
 				.lside {
-					border-right:2px solid #000;
 					margin-right:2%;
 				}
 
 				.rside {
+					border-left:2px solid #000;
+					padding-left:2%;
 					margin-left:2%;
 				}
 			}
@@ -54,7 +64,7 @@
 		<header>
 			<button id="login">EduSynch Login</button>
 			<button id="categories">GET Categories</button>
-			<button id="new_passage">Next Question ></button>
+			<button id="new_passage">Next Exercise ></button>
 			<ul id="cat-ul">
 			</ul>
 		</header>

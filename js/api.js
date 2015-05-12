@@ -7,6 +7,10 @@ var devURL = 'http://develop.edusynch.com';
 var qCount = 0;
 var qTotal = 0;
 
+function questions() {
+	alert("in questions!!!");
+}
+
 function exercise(cat) {
 	$.ajax({
 		type: "POST",
@@ -18,23 +22,21 @@ function exercise(cat) {
  
 			$.getJSON( edusynchNext, function( q ) {
 		    	console.log(q);
-		      	var pHTML = "";
+		    	var pHTML = "";
 		      	var qHTML = "";
 		      	var aHTML = "";
 		      	var v = q.paragraphs[0];
- 				
-		      	/* 
- 				pHTML = '<p class="paragraph-txt-' + v.id + '">' + v.paragraph_text + '</p>';
-	      		$('#paragraphs').append(pHTML);
-	      		*/
- 
+
+		      	$(q.paragraphs).each(function(i, p) {
+		      		pHTML = '<p class="paragraph-txt-' + i + '">' + p.paragraph_text + '</p>';
+		      		$('#paragraphs').append(pHTML);
+		      	});
+ 	 	 
 		      	if (v.questions[qCount].question_paragraph != null) {
-		      		pHTML = '<p class="paragraph-txt-' + v.questions[qCount].id + '">' + v.questions[qCount].question_paragraph + '</p>';
-	      			$('#paragraphs').append(pHTML);
-		      	} else {
-		      		pHTML = '<p class="paragraph-txt-' + v.questions[qCount].id + '">' + v.paragraph_text + '</p>';
-	      			$('#paragraphs').append(pHTML);
+	      			$('.paragraph-txt-' + qCount).html(v.questions[qCount].question_paragraph);
 		      	}
+
+		      	$('.paragraph-txt-' + qCount).addClass('active');
 
 	      		qHTML = '<p>' + v.questions[qCount].description + '</p>';
 	      		$('#questions').append(qHTML);
