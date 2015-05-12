@@ -5,13 +5,47 @@ var devURL = 'http://develop.edusynch.com';
 
 //keeps track of q # and Total
 var qCount = 0;
-var qTotal = 0;
+var pCount = 0;
+var currentExercise = {};
 
-function questions() {
-	alert("in questions!!!");
+function skip() { 
+	qCount++;
+	if (currentExercise.paragraphs[pCount].questions.length > qCount) {
+		doExercise(currentExercise);
+	} else {
+		alert('end of this exercise');
+		qCount = 0;
+	}
 }
 
-function exercise(cat) {
+function doExercise(q) {
+	console.log(q);
+  	var qHTML = "";
+  	var aHTML = "";
+  	var v = q.paragraphs[pCount];
+
+  	$('#questions').html('');
+  	$('#alts').html('');
+
+  	$('.qbtn').show();
+	 
+  	if (v.questions[qCount].question_paragraph != null) {
+		$('.paragraph-txt-' + pCount).html(v.questions[qCount].question_paragraph);
+  	}
+
+  	$('.paragraph-txt-' + pCount).addClass('active');
+
+	qHTML = '<p>' + v.questions[qCount].description + '</p>';
+	$('#questions').append(qHTML);
+
+	$(v.questions[qCount].alternatives).each(function(index, alt) {
+		aHTML = '<li><label><input class="li-radio" type="radio" name="question" value="' + alt.id + '"> &nbsp;' + alt.description + '</label></li>';
+		$('#alts').append(aHTML);
+	});
+}
+
+function getExercise(cat) {
+
 	$.ajax({
 		type: "POST",
 	  	url: devURL + "/api/exercises/new_exercise?token="+token+"&category="+cat,
@@ -21,30 +55,15 @@ function exercise(cat) {
 		    var edusynchNext = devURL + "/api/questions/next_question?token="+token+"&exercise="+data.id;
  
 			$.getJSON( edusynchNext, function( q ) {
-		    	console.log(q);
-		    	var pHTML = "";
-		      	var qHTML = "";
-		      	var aHTML = "";
-		      	var v = q.paragraphs[0];
+				currentExercise = q;
+				var pHTML = "";
 
-		      	$(q.paragraphs).each(function(i, p) {
-		      		pHTML = '<p class="paragraph-txt-' + i + '">' + p.paragraph_text + '</p>';
-		      		$('#paragraphs').append(pHTML);
-		      	});
- 	 	 
-		      	if (v.questions[qCount].question_paragraph != null) {
-	      			$('.paragraph-txt-' + qCount).html(v.questions[qCount].question_paragraph);
-		      	}
+				$(q.paragraphs).each(function(i, p) {
+			  		pHTML = '<p class="paragraph-txt-' + i + '">' + p.paragraph_text + '</p>';
+			  		$('#paragraphs').append(pHTML);
+			  	});
 
-		      	$('.paragraph-txt-' + qCount).addClass('active');
-
-	      		qHTML = '<p>' + v.questions[qCount].description + '</p>';
-	      		$('#questions').append(qHTML);
-
-	      		$(v.questions[qCount].alternatives).each(function(index, alt) {
-	      			aHTML = '<li><label><input class="li-radio" type="radio" name="question" value="' + alt.id + '"> &nbsp;' + alt.description + '</label></li>';
-	      			$('#alts').append(aHTML);
-	      		});
+				doExercise(q);
 		    	
 			}); // end getJSON
 		} // end success
@@ -70,7 +89,7 @@ $(function() {
 	      console.log(data);
 
 	      $(data).each(function(i, v) {
-	      	var catHTML = '<li><a href="#" onclick="exercise(' + v.id + ')">' + v.name + '</a></li>';
+	      	var catHTML = '<li><a href="#" onclick="getExercise(' + v.id + ')">' + v.name + '</a></li>';
 	      	$('#cat-ul').append(catHTML);
 	      });
 
@@ -81,7 +100,12 @@ $(function() {
 		$('#questions').html('');
 		$('#alts').html('');
 		$('#paragraphs').html('');
-		exercise(1);
+		getExercise(1);
 	}); //end new exercise click
+ 
+	$('#skip').click(function() {
+		skip();
+	});
+
 
 });
