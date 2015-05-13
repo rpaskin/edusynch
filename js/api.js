@@ -3,7 +3,7 @@ var token = '76847686f3cb1b1c50e2796d264bba0c';
 var stageURL = 'http://stage.edusynch.com';
 var devURL = 'http://develop.edusynch.com';
 
-//keeps track of q # and Total
+//keeps track of q # and p #
 var qCount = 0;
 var pCount = 0;
 var currentExercise = {};
@@ -13,8 +13,18 @@ function skip() {
 	if (currentExercise.paragraphs[pCount].questions.length > qCount) {
 		doExercise(currentExercise);
 	} else {
-		alert('end of this exercise');
 		qCount = 0;
+		$('.paragraph-txt-' + pCount).html(currentExercise.paragraphs[pCount].paragraph_text);
+		$('.p-text').removeClass('active');
+
+		pCount++;
+		if (currentExercise.paragraphs.length > pCount) {
+			doExercise(currentExercise);
+		} else {
+			alert('end of exercise');
+			pCount = 0;
+			nextExercise();
+		}
 	}
 }
 
@@ -27,10 +37,13 @@ function doExercise(q) {
   	$('#questions').html('');
   	$('#alts').html('');
 
+
   	$('.qbtn').show();
 	 
   	if (v.questions[qCount].question_paragraph != null) {
 		$('.paragraph-txt-' + pCount).html(v.questions[qCount].question_paragraph);
+  	} else {
+  		$('.paragraph-txt-' + pCount).html(v.paragraph_text);
   	}
 
   	$('.paragraph-txt-' + pCount).addClass('active');
@@ -59,7 +72,7 @@ function getExercise(cat) {
 				var pHTML = "";
 
 				$(q.paragraphs).each(function(i, p) {
-			  		pHTML = '<p class="paragraph-txt-' + i + '">' + p.paragraph_text + '</p>';
+			  		pHTML = '<p class="p-text paragraph-txt-' + i + '">' + p.paragraph_text + '</p>';
 			  		$('#paragraphs').append(pHTML);
 			  	});
 
@@ -70,6 +83,12 @@ function getExercise(cat) {
 	});// end Ajax
 }// end function exersice
 
+function nextExercise() {
+	$('#questions').html('');
+	$('#alts').html('');
+	$('#paragraphs').html('');
+	getExercise(1);
+}
 
 $(function() {
 
@@ -97,10 +116,7 @@ $(function() {
 	}); // end categoires click
 
 	$('#new_passage').click(function() {
-		$('#questions').html('');
-		$('#alts').html('');
-		$('#paragraphs').html('');
-		getExercise(1);
+		nextExercise();
 	}); //end new exercise click
  
 	$('#skip').click(function() {
