@@ -43,6 +43,27 @@
 				display: none;
 			}
 
+			.qresult {
+				padding:10px 20px;
+				font-size:14px;
+				width:300px;
+				text-align: center;
+				display: none;
+			}
+
+			#qright {
+				color:white;
+				background:green;
+			}
+
+			#qwrong {
+				background: red;
+			}
+
+			#nextq {
+				display: none;
+			}
+
 			@media (min-width: 700px) {
 				.half {
 					width:48%;
@@ -83,6 +104,12 @@
 
 			<button id="skip" class="qbtn">Skip +</button>
 			<button id="qsubmit" class="qbtn">Submit >>></button>
+
+			<p id="qright" class="qresult">Correct! You are smart!</p>
+			<p id="qwrong" class="qresult">WRONG!! You are dumb!</p>
+
+			<button id="nextq">Next Question >></button>
+
 		</section>
 
 		<section class="half rside">

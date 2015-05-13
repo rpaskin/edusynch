@@ -8,7 +8,9 @@ var qCount = 0;
 var pCount = 0;
 var currentExercise = {};
 
-function skip() { 
+function skip() {
+	$('#nextq').hide();
+	$('.qresult').hide(); 
 	qCount++;
 	if (currentExercise.paragraphs[pCount].questions.length > qCount) {
 		doExercise(currentExercise);
@@ -52,7 +54,7 @@ function doExercise(q) {
 	$('#questions').append(qHTML);
 
 	$(v.questions[qCount].alternatives).each(function(index, alt) {
-		aHTML = '<li><label><input class="li-radio" type="radio" name="question" value="' + alt.id + '"> &nbsp;' + alt.description + '</label></li>';
+		aHTML = '<li><label><input class="li-radio" type="radio" name="question" value="' + alt.right + '"> &nbsp;' + alt.description + '</label></li>';
 		$('#alts').append(aHTML);
 	});
 }
@@ -121,6 +123,24 @@ $(function() {
  
 	$('#skip').click(function() {
 		skip();
+	});
+
+	$('#nextq').click(function() {
+		skip();
+	});
+
+	$('#qsubmit').click(function() {
+		var right = $("input:radio[name='question']:checked").val();
+		console.log(right);
+
+		if(right == 'true') {
+			$('#qright').show();
+		} else {
+			$('#qwrong').show();
+		}
+
+		$('#nextq').show();
+
 	});
 
 
