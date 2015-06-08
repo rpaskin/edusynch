@@ -8,6 +8,11 @@ var qCount = 0;
 var pCount = 0;
 var currentExercise = {};
 
+//keeps track of category id, question id, exercise id for post_answer & skip
+var category_id = 1;
+var q_id = 0;
+var e_id = 0;
+
 function skip() {
 	$('#nextq').hide();
 	$('.qresult').hide(); 
@@ -50,7 +55,7 @@ function doExercise(q) {
 
   	$('.paragraph-txt-' + pCount).addClass('active');
 
-	qHTML = '<p>' + v.questions[qCount].description + '</p>';
+	qHTML = '<p class="question" data-id="' + v.questions[qCount].id + '">' + v.questions[qCount].description + '</p>';
 	$('#questions').append(qHTML);
 
 	$(v.questions[qCount].alternatives).each(function(index, alt) {
@@ -61,6 +66,8 @@ function doExercise(q) {
 
 function getExercise(cat) {
 
+	category_id = cat;
+
 	$.ajax({
 		type: "POST",
 	  	url: devURL + "/api/exercises/new_exercise?token="+token+"&category="+cat,
@@ -68,7 +75,9 @@ function getExercise(cat) {
 		    console.log(data);
 
 		    var edusynchNext = devURL + "/api/questions/next_question?token="+token+"&exercise="+data.id;
- 
+ 			e_id = data.id;
+ 			console.log("exercise ID: ", e_id);
+
 			$.getJSON( edusynchNext, function( q ) {
 				currentExercise = q;
 				var pHTML = "";
@@ -122,7 +131,17 @@ $(function() {
 	}); //end new exercise click
  
 	$('#skip').click(function() {
-		skip();
+		q_id = $('.question').data('id');
+		console.log("q_id: ", q_id);
+
+		$.ajax({
+			type: "POST",
+		  	url: devURL + "/api/questions/skip?token="+token+"&question="+q_id+"&exercise="+e_id+"&right=false&duration=5000",
+		  	success: function(data){
+		  		console.log("posted skip: ", data);
+		  		skip();
+		  	}
+		});
 	});
 
 	$('#nextq').click(function() {
@@ -132,14 +151,23 @@ $(function() {
 	$('#qsubmit').click(function() {
 		var right = $("input:radio[name='question']:checked").val();
 		console.log(right);
+		q_id = $('.question').data('id');
+		console.log("q_id: ", q_id);
 
 		if(right == 'true') {
 			$('#qright').show();
 		} else {
 			$('#qwrong').show();
 		}
-
-		$('#nextq').show();
+ 
+		$.ajax({
+			type: "POST",
+		  	url: devURL + "/api/questions/post_answer?token="+token+"&question="+q_id+"&exercise="+e_id+"&right="+right+"&duration=5000",
+		  	success: function(data){
+		  		console.log("posted answer: ", data);
+		  		$('#nextq').show();
+		  	}
+		});
 
 	});
 
